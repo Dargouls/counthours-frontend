@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { api } from '../../api/api';
+import dayjs from 'dayjs';
 
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useForm } from 'react-hook-form';
@@ -12,11 +13,15 @@ import { Alert, Collapse, TextField } from '@mui/material';
 import { UserServicesList } from '../../components/userServicesList/userServicesList';
 import { LoadingButton } from '@mui/lab';
 import { TimerDate } from '../../components/timerDate/timerDate';
+import { useFormattedValues } from '../../hooks/useFormattedValues';
+import { useEffect, useRef } from 'react';
 
 const Counter = () => {
+	const { setValue } = useFormattedValues();
 	const queryClient = useQueryClient();
 	const { register, watch, reset } = useForm();
 	const serviceName = watch('serviceName');
+	const inputRef = useRef<HTMLInputElement>(null);
 
 	const { data: service, isLoading: isLoadingService } = useQuery('service', async () =>
 		getService()
@@ -27,7 +32,7 @@ const Counter = () => {
 			const newService = {
 				name: serviceName,
 				user_id: 1,
-				start_date: new Date().toISOString(),
+				start_date: setValue(new Date()),
 				end_date: null,
 			};
 			console.log('service: ', newService);
@@ -37,13 +42,11 @@ const Counter = () => {
 		onSuccess: () => {
 			toast.success('Período iniciado!');
 			queryClient.setQueryData('service', (current: any) => {
-				console.log(current);
-
 				return {
 					...current,
 					name: serviceName,
 					user_id: 1,
-					start_date: new Date().toISOString(),
+					start_date: setValue(new Date()),
 					end_date: null,
 				};
 			});
@@ -62,21 +65,27 @@ const Counter = () => {
 		mutationKey: 'finishService',
 		mutationFn: async () => {
 			const newService = {
-				end_date: new Date().toISOString(),
+				end_date: setValue(new Date()),
 			};
-			console.log('service: ', newService);
-			if (!service?.id) toast.error('Nenhum serviço iniciado');
+			if (!service?.id) {
+				toast.error('Nenhum serviço iniciado');
+				return;
+			}
+
 			const response = await api.patch(`/service/update/${service?.id}`, newService);
 			return response;
 		},
 		onSuccess: () => {
-			toast.success('Período finalizado com sucesso');
+			toast.success('Período finalizado com êxito');
 			queryClient.setQueryData('service', (current: any) => {
 				return { id: current.id };
 			});
 		},
 		onError: (error: AxiosError) => {
 			console.log(error);
+			queryClient.setQueryData('service', (current: any) => {
+				return {};
+			});
 			toast.error('Erro ao fechar o período');
 		},
 	});
@@ -98,6 +107,10 @@ const Counter = () => {
 		finishService();
 	};
 
+	useEffect(() => {
+		inputRef.current?.focus();
+	}, []);
+
 	return (
 		<MagicMotion>
 			<Wrapper data-aos='zoom-out-down'>
@@ -111,6 +124,7 @@ const Counter = () => {
 							className='w-100'
 							variant='filled'
 							label='Nome da atividade (opcional)'
+							inputRef={inputRef}
 							{...register('serviceName')}
 						/>
 					</Collapse>

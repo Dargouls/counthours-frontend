@@ -11,7 +11,14 @@ import { DefaultRouter } from './router/default-router.tsx';
 import { darkTheme } from './layout/themes/darkmode.ts';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
+dayjs.locale('de');
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault('America/Sao_Paulo');
 const router = createBrowserRouter([...DefaultRouter.map((route: IRoute) => route)], {
 	basename: import.meta.env.BASE_URL,
 });

@@ -11,10 +11,9 @@ export const DefaultLayout = () => {
 		AOS.init({
 			startEvent: 'DOMContentLoaded',
 			disable: function () {
-				var maxWidth = 996;
+				var maxWidth = 778;
 				return window.innerWidth < maxWidth;
 			},
-			throttleDelay: 10,
 			once: true,
 			duration: 500,
 			offset: 10,

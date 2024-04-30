@@ -1,26 +1,32 @@
-import { Card, CardContent, CardHeader, ImageList, Skeleton, Typography } from '@mui/material';
+import {
+	Button,
+	Card,
+	CardContent,
+	CardHeader,
+	ImageList,
+	Skeleton,
+	Typography,
+} from '@mui/material';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { api } from '../../api/api';
 import { IService } from '../../baseInterfaces/IService';
 import { useFormattedValues } from '../../hooks/useFormattedValues';
 import { Wrapper } from './style';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { MagicMotion } from 'react-magic-motion';
 
 export const UserServicesList = ({ doRefetch }: any) => {
 	const { setValue } = useFormattedValues();
 
 	const { data: services, isLoading, refetch } = useQuery('services', () => getServices());
-
 	async function getServices() {
 		try {
 			const response = await api.get('/services/all/1');
 
-			console.log(response?.data);
-
 			return response?.data;
 		} catch (error) {
+			console.log(error);
 			toast.error('Erro ao carregar serviços');
 		}
 	}
@@ -28,14 +34,15 @@ export const UserServicesList = ({ doRefetch }: any) => {
 	useEffect(() => {
 		refetch();
 	}, [doRefetch]);
+
 	return (
 		<MagicMotion>
 			<Wrapper>
 				<h1 className='mb-4'>Últimos períodos</h1>
 
 				<ImageList sx={{ width: 700, height: 150 }} cols={3} rowHeight={150}>
-					{services &&
-						services.slice(0, 3).map((service: IService) => {
+					{Array.isArray(services) &&
+						services?.slice(0, 3).map((service: IService) => {
 							return (
 								new Date(service?.end_date || 0).getTime() >
 									new Date(service?.start_date).getTime() && (

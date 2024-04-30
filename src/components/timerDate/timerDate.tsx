@@ -16,8 +16,9 @@ export const TimerDate = ({ date, isLoading }: ITimer) => {
 		const updateTimer = () => {
 			const timeDifference = new Date().getTime() - new Date(date).getTime();
 			const hours = Math.floor(timeDifference / (1000 * 60 * 60));
+			console.log(hours);
 			const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-			setTimer(`${hours < 10 ? '' : '0'}${hours}:${minutes.toString().padStart(2, '0')}`);
+			setTimer(`${hours}:${minutes.toString().padStart(2, '0')}`);
 			setLoading(isLoading);
 		};
 

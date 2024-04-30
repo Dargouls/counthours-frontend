@@ -27,9 +27,11 @@ export const MergeServices = ({ open, onClose, idsServices }: IModalProps) => {
 	const { register, handleSubmit, watch } = useForm();
 	const mergeName = watch('merge-name');
 	const { mutate: mergeServices, isLoading: isMerging } = useMutation(() => handleMergeServices(), {
-		onMutate: () => {
-			toast.success('Serviços juntados com sucesso!');
+		onSettled: () => {
 			onClose();
+		},
+		onSuccess: () => {
+			toast.success('Serviços juntados com sucesso!');
 		},
 		onError: (err: AxiosError) => {
 			console.log(err);
@@ -38,18 +40,13 @@ export const MergeServices = ({ open, onClose, idsServices }: IModalProps) => {
 	});
 
 	async function handleMergeServices() {
-		try {
-			const response = await api.post('/services/merge', {
-				ids: idsServices.map((id) => Number(id)),
-				name: mergeName || null,
-				user_id: 1,
-			});
-
-			console.log(response?.data);
-			return response?.data;
-		} catch (error) {
-			console.log(error);
-		}
+		console.log('idsServices: ', idsServices);
+		const response = await api.post('/services/merge', {
+			ids: idsServices.map((id) => id),
+			name: mergeName || null,
+			user_id: 1,
+		});
+		return response?.data;
 	}
 
 	return (
@@ -74,13 +71,14 @@ export const MergeServices = ({ open, onClose, idsServices }: IModalProps) => {
 					{...register('merge-name')}
 				/>
 				<Box className='flex gap-2 mt-4'>
-					<form onSubmit={handleSubmit(() => mergeServices())}></form>
-					<Button variant='text' onClick={onClose}>
-						Cancelar
-					</Button>
-					<LoadingButton variant='contained' loading={isMerging}>
-						Juntar
-					</LoadingButton>
+					<form onSubmit={handleSubmit(() => mergeServices())}>
+						<Button variant='text' onClick={onClose}>
+							Cancelar
+						</Button>
+						<LoadingButton type='submit' variant='contained' loading={isMerging}>
+							Juntar
+						</LoadingButton>
+					</form>
 				</Box>
 			</Box>
 		</Modal>
