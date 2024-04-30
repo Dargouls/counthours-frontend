@@ -1,4 +1,4 @@
-import { Badge, Box, Button, Checkbox, LinearProgress, Paper, Typography } from '@mui/material';
+import { Box, Button, Checkbox, LinearProgress, Paper, Typography } from '@mui/material';
 import { Wrapper } from './style';
 
 import {
@@ -9,23 +9,21 @@ import {
 	GridSlots,
 } from '@mui/x-data-grid';
 import toast from 'react-hot-toast';
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { api } from '../../api/api';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFormattedValues } from '../../hooks/useFormattedValues';
-import { IService } from '../../baseInterfaces/IService';
 import { MergeServices } from '../../components/mergeServices/mergeServices';
 import { IMergedService } from '../../baseInterfaces/IMergedService';
+
 export const UserServices = () => {
 	const { setValue } = useFormattedValues();
 	const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
 	const [showMerge, setShowMerge] = useState(false);
 
-	const {
-		data: services,
-		isLoading: isLoadingServices,
-		refetch: refetchServices,
-	} = useQuery('userServices', () => getServices());
+	const { data: services, isLoading: isLoadingServices } = useQuery('userServices', () =>
+		getServices()
+	);
 
 	async function getServices() {
 		try {

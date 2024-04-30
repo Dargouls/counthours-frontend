@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { Button, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 
 interface ITimer {

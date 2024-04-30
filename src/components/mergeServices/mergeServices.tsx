@@ -74,10 +74,11 @@ export const MergeServices = ({ open, onClose, idsServices }: IModalProps) => {
 					{...register('merge-name')}
 				/>
 				<Box className='flex gap-2 mt-4'>
+					<form onSubmit={handleSubmit(() => mergeServices())}></form>
 					<Button variant='text' onClick={onClose}>
 						Cancelar
 					</Button>
-					<LoadingButton variant='contained' loading={isMerging} onClick={() => mergeServices()}>
+					<LoadingButton variant='contained' loading={isMerging}>
 						Juntar
 					</LoadingButton>
 				</Box>

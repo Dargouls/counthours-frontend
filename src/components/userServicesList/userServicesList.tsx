@@ -1,12 +1,4 @@
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CircularProgress,
-	ImageList,
-	Skeleton,
-	Typography,
-} from '@mui/material';
+import { Card, CardContent, CardHeader, ImageList, Skeleton, Typography } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { api } from '../../api/api';
@@ -16,7 +8,7 @@ import { Wrapper } from './style';
 import { useEffect } from 'react';
 import { MagicMotion } from 'react-magic-motion';
 
-export const UserServicesList = ({ classname, doRefetch }: any) => {
+export const UserServicesList = ({ doRefetch }: any) => {
 	const { setValue } = useFormattedValues();
 
 	const { data: services, isLoading, refetch } = useQuery('services', () => getServices());

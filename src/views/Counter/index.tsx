@@ -8,7 +8,7 @@ import { Wrapper } from './style';
 
 import toast from 'react-hot-toast';
 import { MagicMotion } from 'react-magic-motion';
-import { Alert, Button, Collapse, TextField } from '@mui/material';
+import { Alert, Collapse, TextField } from '@mui/material';
 import { UserServicesList } from '../../components/userServicesList/userServicesList';
 import { LoadingButton } from '@mui/lab';
 import { TimerDate } from '../../components/timerDate/timerDate';
