@@ -20,7 +20,7 @@ import {
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { api } from '../../api/api';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFormattedValues } from '../../hooks/useFormattedValues';
 import { MergeServices } from '../../components/mergeServices/mergeServices';
 import { IMergedService } from '../../baseInterfaces/IMergedService';
@@ -35,7 +35,6 @@ export const UserServices = () => {
 		data: services,
 		isLoading: isLoadingServices,
 		refetch,
-		isRefetching,
 	} = useQuery('userServices', () => getServices(), {
 		onError: (error: AxiosError) => {
 			console.log(error);

@@ -9,7 +9,7 @@ export const useFormattedValues = () => {
 				return `${Math.floor(value / 3600000)}h ${Math.floor((value % 3600000) / 60000)}m`;
 
 			case regexDateTime.test(value):
-				console.log('formatação: ', dayjs(value).format('YYYY-MM-DDTHH:mm:ssZ'));
+				return dayjs(value).format('YYYY-MM-DDTHH:mm:ssZ');
 			default:
 				return value;
 		}

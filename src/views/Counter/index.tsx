@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios';
 import { api } from '../../api/api';
-import dayjs from 'dayjs';
 
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useForm } from 'react-hook-form';
@@ -83,7 +82,7 @@ const Counter = () => {
 		},
 		onError: (error: AxiosError) => {
 			console.log(error);
-			queryClient.setQueryData('service', (current: any) => {
+			queryClient.setQueryData('service', () => {
 				return {};
 			});
 			toast.error('Erro ao fechar o período');

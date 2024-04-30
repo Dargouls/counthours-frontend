@@ -1,19 +1,11 @@
-import {
-	Button,
-	Card,
-	CardContent,
-	CardHeader,
-	ImageList,
-	Skeleton,
-	Typography,
-} from '@mui/material';
+import { Card, CardContent, CardHeader, ImageList, Skeleton, Typography } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useQuery } from 'react-query';
 import { api } from '../../api/api';
 import { IService } from '../../baseInterfaces/IService';
 import { useFormattedValues } from '../../hooks/useFormattedValues';
 import { Wrapper } from './style';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { MagicMotion } from 'react-magic-motion';
 
 export const UserServicesList = ({ doRefetch }: any) => {
