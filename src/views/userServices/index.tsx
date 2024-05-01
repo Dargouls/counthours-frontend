@@ -89,7 +89,7 @@ export const UserServices = () => {
 		},
 		{
 			field: 'is_merged',
-			headerName: 'Junção',
+			headerName: 'É mesclado',
 			width: 180,
 			renderCell: (params: GridRenderCellParams) => (
 				<Checkbox color='success' checked={!!params.value} disabled />
@@ -116,6 +116,9 @@ export const UserServices = () => {
 							initialState={{
 								pagination: {
 									paginationModel: { page: 0, pageSize: 5 },
+								},
+								sorting: {
+									sortModel: [{ field: 'end_date', sort: 'desc' }],
 								},
 							}}
 							pageSizeOptions={[5, 10]}

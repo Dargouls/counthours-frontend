@@ -26,6 +26,13 @@ export const TimerDate = ({ date, isLoading }: ITimer) => {
 		return () => clearInterval(intervalId);
 	}, [date]);
 
+	useEffect(() => {
+		return () => {
+			// Esta função é chamada quando o componente desmonta.
+			setTimer('0:00');
+		};
+	}, []);
+
 	return (
 		<LoadingButton variant='outlined' loading={internalLoading}>
 			<Typography variant='h3'>{timer}</Typography>

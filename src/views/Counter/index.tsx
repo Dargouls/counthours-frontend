@@ -71,7 +71,9 @@ const Counter = () => {
 				return;
 			}
 
+			console.log('service: ', service, 'newService: ', newService);
 			const response = await api.patch(`/service/update/${service?.id}`, newService);
+			console.log('response: ', response);
 			return response;
 		},
 		onSuccess: () => {
