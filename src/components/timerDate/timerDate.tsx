@@ -1,5 +1,6 @@
 import { LoadingButton } from '@mui/lab';
 import { Typography } from '@mui/material';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 
 interface ITimer {
@@ -14,11 +15,13 @@ export const TimerDate = ({ date, isLoading }: ITimer) => {
 	useEffect(() => {
 		if (!date) return;
 		const updateTimer = () => {
-			const timeDifference = new Date().getTime() - new Date(date).getTime();
+			const timeDifference = dayjs().diff(dayjs(date));
 			const hours = Math.floor(timeDifference / (1000 * 60 * 60));
-			console.log(hours);
 			const minutes = Math.floor((timeDifference / (1000 * 60)) % 60);
-			setTimer(`${hours}:${minutes.toString().padStart(2, '0')}`);
+			const seconds = Math.floor((timeDifference / 1000) % 60);
+			setTimer(
+				`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+			);
 			setLoading(isLoading);
 		};
 
