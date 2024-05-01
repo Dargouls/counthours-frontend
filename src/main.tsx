@@ -19,7 +19,7 @@ dayjs.locale('de');
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Sao_Paulo');
-
+console.log(dayjs());
 const router = createBrowserRouter([...DefaultRouter.map((route: IRoute) => route)], {
 	basename: import.meta.env.BASE_URL,
 });

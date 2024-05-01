@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { MenuIcon } from 'lucide-react';
 import { useState } from 'react';
-import logo from '../../assets/images/brand/clock.svg';
+import logo from '../../assets/images/brand/clock (2).svg';
 import avatar from '../../assets/images/avatars/avatar.png';
 import { useNavigate } from 'react-router-dom';
 
