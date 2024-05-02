@@ -14,6 +14,7 @@ import { LoadingButton } from '@mui/lab';
 import { TimerDate } from '../../components/timerDate/timerDate';
 import { useFormattedValues } from '../../hooks/useFormattedValues';
 import { useEffect, useRef } from 'react';
+import dayjs from 'dayjs';
 
 const Counter = () => {
 	const { setValue } = useFormattedValues();
@@ -163,7 +164,8 @@ const Counter = () => {
 				<Collapse in={!service?.end_date && service?.start_date ? true : false}>
 					<Alert severity='info' className='mb-4'>
 						Início do período {service?.name && `(${service?.name})`}:{' '}
-						{new Date(service?.start_date).toLocaleString()}
+						{service?.start_date &&
+							dayjs(new Date(service?.start_date).toISOString()).format('DD/MM/YYYY, HH:mm')}
 					</Alert>
 				</Collapse>
 
