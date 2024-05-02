@@ -7,6 +7,7 @@ import { useFormattedValues } from '../../hooks/useFormattedValues';
 import { Wrapper } from './style';
 import { useEffect } from 'react';
 import { MagicMotion } from 'react-magic-motion';
+import dayjs from 'dayjs';
 
 export const UserServicesList = ({ doRefetch }: any) => {
 	const { setValue } = useFormattedValues();
@@ -36,18 +37,18 @@ export const UserServicesList = ({ doRefetch }: any) => {
 					{Array.isArray(services) &&
 						services?.slice(0, 3).map((service: IService) => {
 							return (
-								new Date(service?.end_date || 0).getTime() >
-									new Date(service?.start_date).getTime() && (
+								dayjs(service?.end_date || 0) > dayjs(service?.start_date) && (
 									<Card>
-										<CardHeader subheader={service.name} />
+										<CardHeader
+											subheader={
+												service.name || dayjs(service.start_date).format('DD/MM/YYYY, HH:mm')
+											}
+										/>
 										<CardContent>
 											<Typography variant='h4' className='flex justify-center'>
 												{setValue(
-													Math.floor(
-														new Date(service?.end_date || 0).getTime() -
-															new Date(service.start_date).getTime()
-													),
-													'hours'
+													Math.floor(dayjs(service?.end_date || 0).diff(dayjs(service.start_date))),
+													{ type: 'hours' }
 												)}
 											</Typography>
 										</CardContent>

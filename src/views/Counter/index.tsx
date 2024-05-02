@@ -19,7 +19,7 @@ import dayjs from 'dayjs';
 const Counter = () => {
 	const { setValue } = useFormattedValues();
 	const queryClient = useQueryClient();
-	const { register, watch, reset } = useForm();
+	const { register, handleSubmit, watch, reset } = useForm();
 	const serviceName = watch('serviceName');
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -32,7 +32,7 @@ const Counter = () => {
 			const newService = {
 				name: serviceName,
 				user_id: 1,
-				start_date: setValue(new Date()),
+				start_date: dayjs(),
 				end_date: null,
 			};
 			console.log('service: ', newService);
@@ -46,7 +46,7 @@ const Counter = () => {
 					...current,
 					name: serviceName,
 					user_id: 1,
-					start_date: setValue(new Date()),
+					start_date: dayjs(),
 					end_date: null,
 				};
 			});
@@ -64,17 +64,7 @@ const Counter = () => {
 	} = useMutation({
 		mutationKey: 'finishService',
 		mutationFn: async () => {
-			const newService = {
-				end_date: setValue(new Date()),
-			};
-			if (!service?.id) {
-				toast.error('Nenhum serviço iniciado');
-				return;
-			}
-
-			console.log('service: ', service, 'newService: ', newService);
-			const response = await api.patch(`/service/update/${service?.id}`, newService);
-			console.log('response: ', response);
+			const response = await api.patch(`/services/end/${service?.id}`);
 			return response;
 		},
 		onSuccess: () => {
@@ -115,7 +105,7 @@ const Counter = () => {
 
 	return (
 		<MagicMotion>
-			<Wrapper data-aos='zoom-out-down'>
+			<Wrapper data-aos='zoom-out-down' onSubmit={handleSubmit(handleStartDate)}>
 				<div className='mb-4 w-100 flex flex-row justify-center'>
 					<Collapse
 						sx={{ width: '50%' }}
@@ -145,6 +135,8 @@ const Counter = () => {
 							loading={isInitLoading}
 							// loadingPosition='start'
 							variant='contained'
+							onKeyDown={handleStartDate}
+							type='submit'
 							onClick={() => handleStartDate()}
 						>
 							Iniciar período
@@ -163,9 +155,8 @@ const Counter = () => {
 				</section>
 				<Collapse in={!service?.end_date && service?.start_date ? true : false}>
 					<Alert severity='info' className='mb-4'>
-						Início do período {service?.name && `(${service?.name})`}:{' '}
-						{service?.start_date &&
-							dayjs(new Date(service?.start_date).toISOString()).format('DD/MM/YYYY, HH:mm')}
+						Início do período:{service?.name && ` (${service?.name})`}:{' '}
+						{service?.start_date && setValue(service?.start_date, { type: 'datetime' })}
 					</Alert>
 				</Collapse>
 

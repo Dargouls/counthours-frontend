@@ -595,6 +595,16 @@ h3 {
   display: flex !important;
 }
 
+.w-max {
+  width: -moz-max-content !important;
+  width: max-content !important;
+}
+
+.min-w-max {
+  min-width: -moz-max-content !important;
+  min-width: max-content !important;
+}
+
 .transform {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important;
 }
@@ -617,4 +627,8 @@ h3 {
 
 .p-8 {
   padding: 2rem !important;
+}
+
+.no-underline {
+  text-decoration-line: none !important;
 }

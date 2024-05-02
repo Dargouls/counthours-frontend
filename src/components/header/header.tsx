@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { MenuIcon } from 'lucide-react';
 import { useState } from 'react';
-import logo from '../../assets/images/brand/clock (2).svg';
+import logo from '../../assets/images/brand/clock.svg';
 import avatar from '../../assets/images/avatars/avatar.png';
 import { useNavigate } from 'react-router-dom';
 
@@ -45,7 +45,7 @@ export const Header = () => {
 						variant='h6'
 						noWrap
 						component='a'
-						href='#'
+						href='/'
 						sx={{
 							mr: 2,
 							display: { xs: 'none', md: 'flex' },
@@ -88,10 +88,16 @@ export const Header = () => {
 							}}
 						>
 							<MenuItem onClick={handleCloseNavMenu}>
-								<Link href='/' textAlign='center'>
+								<Link className='no-underline' onClick={() => navigate('/')} textAlign='center'>
 									Início
 								</Link>
-								<Link href='/services' textAlign='center'>
+							</MenuItem>
+							<MenuItem onClick={handleCloseNavMenu}>
+								<Link
+									className='no-underline'
+									onClick={() => navigate('/services')}
+									textAlign='center'
+								>
 									Períodos
 								</Link>
 							</MenuItem>
