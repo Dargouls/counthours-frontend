@@ -595,6 +595,18 @@ h3 {
   display: flex !important;
 }
 
+.h-screen {
+  height: 100vh !important;
+}
+
+.w-96 {
+  width: 24rem !important;
+}
+
+.w-full {
+  width: 100% !important;
+}
+
 .w-max {
   width: -moz-max-content !important;
   width: max-content !important;
@@ -615,6 +627,10 @@ h3 {
 
 .flex-col {
   flex-direction: column !important;
+}
+
+.items-center {
+  align-items: center !important;
 }
 
 .justify-center {

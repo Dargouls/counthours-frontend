@@ -1,22 +1,25 @@
+import { Suspense, lazy, useEffect, useRef } from 'react';
 import { AxiosError } from 'axios';
 import { api } from '../../api/api';
 
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useForm } from 'react-hook-form';
+import { useFormattedValues } from '../../hooks/useFormattedValues';
 
 import { Wrapper } from './style';
 
-import toast from 'react-hot-toast';
-import { MagicMotion } from 'react-magic-motion';
 import { Alert, Collapse, TextField } from '@mui/material';
-import { UserServicesList } from '../../components/userServicesList/userServicesList';
+import { MagicMotion } from 'react-magic-motion';
+const UserServicesList = lazy(() => import('../../components/userServicesList/userServicesList'));
+// import { UserServicesList } from '../../components/userServicesList/userServicesList';
 import { LoadingButton } from '@mui/lab';
 import { TimerDate } from '../../components/timerDate/timerDate';
-import { useFormattedValues } from '../../hooks/useFormattedValues';
-import { useEffect, useRef } from 'react';
+import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
+import { useFinishService } from '../../hooks/useFinishService';
 
 const Counter = () => {
+	const { finishService, isFinishingService, serviceFinished } = useFinishService();
 	const { setValue } = useFormattedValues();
 	const queryClient = useQueryClient();
 	const { register, handleSubmit, watch, reset } = useForm();
@@ -35,15 +38,14 @@ const Counter = () => {
 				start_date: dayjs(),
 				end_date: null,
 			};
-			console.log('service: ', newService);
 			const response = await api.post('/services', newService);
 			return response;
 		},
-		onSuccess: () => {
+		onSuccess: (e) => {
 			toast.success('Período iniciado!');
-			queryClient.setQueryData('service', (current: any) => {
+			queryClient.setQueryData('service', () => {
 				return {
-					...current,
+					id: e.data.service.id,
 					name: serviceName,
 					user_id: 1,
 					start_date: dayjs(),
@@ -54,31 +56,6 @@ const Counter = () => {
 		onError: (error: AxiosError) => {
 			console.log(error);
 			toast.error('Erro ao iniciar o período');
-		},
-	});
-
-	const {
-		mutate: finishService,
-		isLoading: isFinishLoading,
-		isSuccess: serviceFinished,
-	} = useMutation({
-		mutationKey: 'finishService',
-		mutationFn: async () => {
-			const response = await api.patch(`/services/end/${service?.id}`);
-			return response;
-		},
-		onSuccess: () => {
-			toast.success('Período finalizado com êxito');
-			queryClient.setQueryData('service', (current: any) => {
-				return { id: current.id };
-			});
-		},
-		onError: (error: AxiosError) => {
-			console.log(error);
-			queryClient.setQueryData('service', () => {
-				return {};
-			});
-			toast.error('Erro ao fechar o período');
 		},
 	});
 
@@ -96,7 +73,7 @@ const Counter = () => {
 		initService();
 	};
 	const handleEndDate = () => {
-		finishService();
+		finishService(service?.id);
 	};
 
 	useEffect(() => {
@@ -146,7 +123,7 @@ const Counter = () => {
 							sx={{ padding: '2rem 6rem', fontSize: '1.5rem', minWidth: '40%' }}
 							variant='contained'
 							color='error'
-							loading={isFinishLoading}
+							loading={isFinishingService}
 							onClick={() => handleEndDate()}
 						>
 							Finalizar período
@@ -160,7 +137,9 @@ const Counter = () => {
 					</Alert>
 				</Collapse>
 
-				<UserServicesList doRefetch={serviceFinished} />
+				<Suspense fallback={<div>Loading...</div>}>
+					<UserServicesList key='exclude' doRefetch={serviceFinished} />
+				</Suspense>
 			</Wrapper>
 		</MagicMotion>
 	);

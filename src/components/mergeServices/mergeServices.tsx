@@ -40,7 +40,6 @@ export const MergeServices = ({ open, onClose, idsServices }: IModalProps) => {
 	});
 
 	async function handleMergeServices() {
-		console.log('idsServices: ', idsServices);
 		const response = await api.post('/services/merge', {
 			ids: idsServices.map((id) => id),
 			name: mergeName || null,
@@ -57,29 +56,29 @@ export const MergeServices = ({ open, onClose, idsServices }: IModalProps) => {
 			aria-describedby='modal-modal-description'
 		>
 			<Box sx={boxStyle}>
-				<Typography id='modal-modal-title' variant='h6' component='h2'>
-					Juntar os períodos
-				</Typography>
-				<Typography id='modal-modal-description' sx={{ mt: 2 }}>
-					Você pode editar esta junção mais tarde, mas não separar os períodos.
-				</Typography>
-				<TextField
-					id='merge-name'
-					className='w-100 mt-2'
-					variant='standard'
-					label='Nome da junção (opcional)'
-					{...register('merge-name')}
-				/>
-				<Box className='flex gap-2 mt-4'>
-					<form onSubmit={handleSubmit(() => mergeServices())}>
+				<form onSubmit={handleSubmit(() => mergeServices())}>
+					<Typography id='modal-modal-title' variant='h6' component='h2'>
+						Juntar os períodos
+					</Typography>
+					<Typography id='modal-modal-description' sx={{ mt: 2 }}>
+						Você pode editar esta junção mais tarde, mas não separar os períodos.
+					</Typography>
+					<TextField
+						id='merge-name'
+						className='w-100 mt-2'
+						variant='standard'
+						label='Nome da junção (opcional)'
+						{...register('merge-name')}
+					/>
+					<Box className='flex gap-2 mt-4'>
 						<Button variant='text' onClick={onClose}>
 							Cancelar
 						</Button>
 						<LoadingButton type='submit' variant='contained' loading={isMerging}>
 							Juntar
 						</LoadingButton>
-					</form>
-				</Box>
+					</Box>
+				</form>
 			</Box>
 		</Modal>
 	);

@@ -1,4 +1,5 @@
 export interface IService {
+	id: string;
 	name?: string | undefined;
 	user_id: number;
 	is_merged: boolean;

@@ -41,7 +41,7 @@ const messagesCodes = {
 	},
 };
 
-export const UserServices = () => {
+const UserServices = () => {
 	const { finishService, isFinishingService, finishedServiceId, serviceFinished } =
 		useFinishService();
 	const { setValue } = useFormattedValues();
@@ -60,19 +60,24 @@ export const UserServices = () => {
 			toast.error(serverErrors.search[error?.response?.status || '500']);
 		},
 	});
+
 	const {
 		mutate: deleteService,
 		isLoading: isDeletingService,
 		variables: serviceDeletedId,
 	} = useMutation({
 		mutationKey: 'deleteService',
-		mutationFn: async (id: number) => {
+		mutationFn: async (id: GridRowSelectionModel) => {
 			const response = await api.delete(`/services/${id}`);
 			return response;
 		},
 		onSuccess: () => {
 			toast.success('Serviço excluído com sucesso');
 			refetch();
+		},
+		onError: (error: AxiosError) => {
+			console.log(error);
+			toast.error(serverErrors.delete[error?.response?.status || 500]);
 		},
 	});
 
@@ -83,6 +88,7 @@ export const UserServices = () => {
 				Math.floor(dayjs(service?.end_date || 0).diff(dayjs(service.start_date))),
 				{ type: 'hours' }
 			);
+
 			return {
 				...service,
 				duration: service?.total_hours
@@ -106,25 +112,26 @@ export const UserServices = () => {
 	// };
 
 	const handleShowMerge = (event: React.MouseEvent<HTMLButtonElement>) => {
-		if (!rowSelectionModel) toast.error('Selecione ao menos dois períodos');
+		if (rowSelectionModel.length < 2) {
+			toast.error('Selecione ao menos dois períodos');
+			return;
+		}
 		setPopErrorAnchor(event.currentTarget);
 
-		for (let serviceId = 0; serviceId < rowSelectionModel.length; serviceId++) {
-			const servicesSelectedId = rowSelectionModel[serviceId];
+		for (const selectedId of rowSelectionModel) {
+			const service = services.find((s: IService) => s.id === selectedId);
 
-			for (let id = 0; id < services.length; id++) {
-				const service = services[id];
-				if (service.id === servicesSelectedId) {
-					if (!service?.end_date || dayjs(service?.end_date).isBefore(dayjs(service?.start_date))) {
-						setError(messagesCodes[4000].message);
-					}
-				}
+			if (!service?.end_date || dayjs(service.end_date).isBefore(service.start_date)) {
+				setError(messagesCodes[4000].message);
+				return;
 			}
 		}
-
-		if (!error) setShowMerge(true);
+		setShowMerge(true);
 	};
 
+	const handleDeleteServices = () => {
+		deleteService(rowSelectionModel);
+	};
 	useEffect(() => {
 		if (serviceFinished) refetch();
 	}, [serviceFinished]);
@@ -200,8 +207,8 @@ export const UserServices = () => {
 		<Wrapper data-aos='zoom-out-down'>
 			<section className='flex flex-col gap-2'>
 				<Typography variant='h4'>Serviços</Typography>
-				<Paper elevation={3}>
-					<Box sx={{ minHeight: 200 }}>
+				<Box sx={{ minHeight: 200 }}>
+					<Paper elevation={3}>
 						<DataGrid
 							autoHeight
 							slots={{
@@ -225,17 +232,28 @@ export const UserServices = () => {
 							}}
 							rowSelectionModel={rowSelectionModel}
 						/>
+					</Paper>
 
+					<Box className='flex flex-row gap-2 mt-2'>
 						<Button
-							size='large'
+							size='medium'
 							disabled={rowSelectionModel.length < 2}
 							variant='contained'
 							onClick={(e) => handleShowMerge(e)}
 						>
 							<Typography>Mesclar períodos</Typography>
 						</Button>
+
+						<Button
+							size='medium'
+							disabled={rowSelectionModel.length < 2}
+							variant='contained'
+							onClick={() => handleDeleteServices()}
+						>
+							<Typography>Apagar selecionados</Typography>
+						</Button>
 					</Box>
-				</Paper>
+				</Box>
 			</section>
 
 			<Backdrop
@@ -266,3 +284,5 @@ export const UserServices = () => {
 		</Wrapper>
 	);
 };
+
+export default UserServices;

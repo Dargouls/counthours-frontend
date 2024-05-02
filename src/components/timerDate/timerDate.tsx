@@ -10,9 +10,10 @@ interface ITimer {
 
 export const TimerDate = ({ date, isLoading }: ITimer) => {
 	const [internalLoading, setLoading] = useState<boolean | undefined>(true);
-	const [timer, setTimer] = useState<string>('0:00');
+	const [timer, setTimer] = useState<string>('0:00:00');
 
 	useEffect(() => {
+		setTimer('0:00:00');
 		if (!date) return;
 		const updateTimer = () => {
 			const timeDifference = dayjs().diff(dayjs(date));
@@ -27,14 +28,7 @@ export const TimerDate = ({ date, isLoading }: ITimer) => {
 
 		const intervalId = setInterval(updateTimer, 1000);
 		return () => clearInterval(intervalId);
-	}, [date]);
-
-	useEffect(() => {
-		return () => {
-			// Esta função é chamada quando o componente desmonta.
-			setTimer('0:00');
-		};
-	}, []);
+	}, [date, isLoading]);
 
 	return (
 		<LoadingButton variant='outlined' loading={internalLoading}>

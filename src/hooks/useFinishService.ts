@@ -18,9 +18,9 @@ export const useFinishService = () => {
 			const response = await api.patch(`/services/end/${id}`);
 			return response;
 		},
-		onSuccess: () => {
-			queryClient.setQueryData('service', (current: any) => {
-				return { id: current.id };
+		onSuccess: (e) => {
+			queryClient.setQueryData('service', () => {
+				return { id: e.data.id };
 			});
 
 			toast.success('Período finalizado!');

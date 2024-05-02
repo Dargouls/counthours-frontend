@@ -6,7 +6,7 @@ import { Header } from '../components/header/header';
 import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
-export const DefaultLayout = () => {
+const DefaultLayout = () => {
 	useEffect(() => {
 		AOS.init({
 			startEvent: 'DOMContentLoaded',
@@ -29,3 +29,5 @@ export const DefaultLayout = () => {
 		</>
 	);
 };
+
+export default DefaultLayout;

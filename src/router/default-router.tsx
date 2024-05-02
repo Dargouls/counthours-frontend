@@ -1,19 +1,22 @@
-import { DefaultLayout } from '../layout/default';
-import Counter from '../views/Counter';
-import { UserServices } from '../views/userServices';
+import { lazy } from 'react';
+const LazyPage = lazy(() => import('../layout/LazyPage'));
+
+const UserServices = lazy(() => import('../views/userServices'));
+const Counter = lazy(() => import('../views/Counter'));
+const DefaultLayout = lazy(() => import('../layout/default'));
 
 export const DefaultRouter = [
 	{
 		path: '/',
-		element: <DefaultLayout />,
+		element: <LazyPage page={<DefaultLayout />} />,
 		children: [
 			{
 				path: '/',
-				element: <Counter />,
+				element: <LazyPage page={<Counter />} />,
 			},
 			{
 				path: '/services',
-				element: <UserServices />,
+				element: <LazyPage page={<UserServices />} />,
 			},
 		],
 	},

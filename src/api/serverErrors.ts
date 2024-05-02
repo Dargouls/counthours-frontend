@@ -5,4 +5,7 @@ const serverErrors: any = {
 		'500': 'Erro interno do servidor. Tente novamente mais tarde!',
 		'400': 'Não foi possível carregar os serviços. Tente novamente mais tarde!',
 	},
+	delete: {
+		500: 'Erro interno do servidor. Tente novamente mais tarde!',
+	},
 };
