@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from 'react-query';
 import { api } from '../api/api';
 import toast from 'react-hot-toast';
 import { AxiosError } from 'axios';
-import dayjs from 'dayjs';
 
 export const useFinishService = () => {
 	const queryClient = useQueryClient();
