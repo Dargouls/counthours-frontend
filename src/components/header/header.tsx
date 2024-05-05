@@ -18,7 +18,7 @@ import logo from '../../assets/images/brand/clock.svg';
 import avatar from '../../assets/images/avatars/avatar.png';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import { LoginPage, useLoginContext } from '../../contexts/AuthContext';
+import { useLoginContext } from '../../contexts/AuthContext';
 
 export const Header = () => {
 	const { getUser } = useAuth();
