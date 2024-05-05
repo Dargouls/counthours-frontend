@@ -35,7 +35,7 @@ api.interceptors.response.use(
 					if (originalRequest) {
 						originalRequest.headers!['Authorization'] = `Bearer ${newToken}`;
 
-						const originalResponse = await api(originalRequest);
+						await api(originalRequest);
 					}
 				} catch (error: any) {
 					Cookies.remove('access_token');

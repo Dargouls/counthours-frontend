@@ -4,12 +4,12 @@ import AOS from 'aos';
 
 import { Header } from '../components/header/header';
 import { Outlet } from 'react-router-dom';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import Login from '../views/Auth/Login';
 import useAuth from '../hooks/useAuth';
 
 const DefaultLayout = () => {
-	const { verifyRefreshToken, _logout } = useAuth();
+	const { verifyRefreshToken } = useAuth();
 
 	useEffect(() => {
 		verifyRefreshToken();
