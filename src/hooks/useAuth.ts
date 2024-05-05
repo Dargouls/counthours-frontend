@@ -58,7 +58,7 @@ const useAuth = () => {
 		Cookies.remove('access_token');
 		Cookies.remove('refresh_token');
 
-		// window.location.href = '/';
+		window.location.href = '/';
 	}
 
 	function getAccessToken() {
@@ -102,10 +102,11 @@ const useAuth = () => {
 				path: '/',
 				sameSite: 'strict',
 			});
-			return response;
+			if (response.status === 200) return true;
 		} catch (error: any) {
 			console.log(error);
 			toast.error(getError(error));
+			return false;
 		}
 	}
 
@@ -113,9 +114,8 @@ const useAuth = () => {
 		const refreshToken = Cookies.get('refresh_token');
 		if (refreshToken === 'undefined' || refreshToken === 'null') {
 			_logout();
-			console.log('refreshToken');
 			toast.error('Sua sessão expirou, faça login novamente...');
-			return;
+			return false;
 		}
 
 		if (refreshToken) {
@@ -123,24 +123,24 @@ const useAuth = () => {
 			const isExpires = Number(time.exp) - Date.now() / 1000 > 0 ? true : false;
 
 			if (isExpires) {
-				regenerateRefreshToken();
+				const response = regenerateRefreshToken();
+				if (!response) _logout();
+				return false;
 			}
-			return true;
 		}
+		return true;
 	}
 	function verifyExpiresAccessToken() {
 		const accessToken = Cookies.get('access_token');
 		if (!accessToken) return false;
-		const verifyToken = jwt_decode.jwtDecode(accessToken);
-		console.log(verifyToken);
+		jwt_decode.jwtDecode(accessToken);
 		return;
 	}
 
 	function verifyExpiresRefreshToken() {
 		const refreshToken = Cookies.get('refresh_token');
 		if (!refreshToken) return false;
-		const verifyToken = jwt_decode.jwtDecode(refreshToken);
-		console.log(verifyToken);
+		jwt_decode.jwtDecode(refreshToken);
 		return true;
 	}
 

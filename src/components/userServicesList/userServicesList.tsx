@@ -12,14 +12,14 @@ import { getError } from '../../utils/internalCodes';
 import useAuth from '../../hooks/useAuth';
 
 const UserServicesList = ({ doRefetch }: any) => {
-	const { verifyExpiresRefreshToken } = useAuth();
+	const { verifyExpiresRefreshToken, getUser } = useAuth();
 	const { setValue } = useFormattedValues();
 	const { data: services, isLoading, refetch } = useQuery('services', () => getServices());
 
 	async function getServices() {
 		if (!verifyExpiresRefreshToken()) return;
 		try {
-			const response = await api.get('/services/all/1');
+			const response = await api.get(`/services/all/${getUser()?.id}`);
 
 			return response?.data;
 		} catch (error: any) {

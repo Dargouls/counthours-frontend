@@ -12,10 +12,7 @@ const DefaultLayout = () => {
 	const { verifyRefreshToken, _logout } = useAuth();
 
 	useEffect(() => {
-		if (verifyRefreshToken()) {
-			_logout();
-			toast.error('Sua sessão expirou, faça login novamente...');
-		}
+		verifyRefreshToken();
 	}, []);
 
 	useEffect(() => {

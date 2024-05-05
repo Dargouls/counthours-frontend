@@ -21,7 +21,7 @@ import useAuth from '../../hooks/useAuth';
 import { useLoginContext } from '../../contexts/AuthContext';
 
 export const Header = () => {
-	const { getUser } = useAuth();
+	const { getUser, _logout } = useAuth();
 	const navigate = useNavigate();
 	const user = getUser();
 	const { toggleShow } = useLoginContext();
@@ -164,7 +164,7 @@ export const Header = () => {
 									<MenuItem onClick={handleCloseUserMenu}>
 										<Typography textAlign='center'>{user?.name}</Typography>
 									</MenuItem>
-									<MenuItem onClick={handleCloseUserMenu}>
+									<MenuItem onClick={() => _logout()}>
 										<Typography textAlign='center'>Sair da conta</Typography>
 									</MenuItem>
 								</Box>

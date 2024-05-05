@@ -32,6 +32,7 @@ const Counter = () => {
 	const { data: service, isLoading: isLoadingService } = useQuery('service', async () =>
 		getService()
 	);
+
 	const { mutate: initService, isLoading: isInitLoading } = useMutation({
 		mutationKey: 'initService',
 		mutationFn: async () => {
@@ -65,7 +66,7 @@ const Counter = () => {
 	async function getService() {
 		if (!verifyExpiresRefreshToken()) return;
 		try {
-			const response = await api.get('/service/user/1');
+			const response = await api.get(`/service/user/${getUser()?.id}`);
 			return response?.data;
 		} catch (error: any) {
 			toast.error(getError(error));

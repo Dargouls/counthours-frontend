@@ -31,6 +31,7 @@ import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import { Check, Trash2 } from 'lucide-react';
 import { useFinishService } from '../../hooks/useFinishService';
+import useAuth from '../../hooks/useAuth';
 
 const messagesCodes = {
 	4000: {
@@ -44,6 +45,7 @@ const messagesCodes = {
 const UserServices = () => {
 	const { finishService, isFinishingService, finishedServiceId, serviceFinished } =
 		useFinishService();
+	const { getUser } = useAuth();
 	const { setValue } = useFormattedValues();
 	const [error, setError] = useState<string | null>();
 	const [popErrorAnchor, setPopErrorAnchor] = useState<null | HTMLElement>(null);
@@ -82,7 +84,7 @@ const UserServices = () => {
 	});
 
 	async function getServices() {
-		const response = await api.get('/services/all/1');
+		const response = await api.get(`/services/all/${getUser()?.id}`);
 		return response?.data.map((service: IService) => {
 			const duration = setValue(
 				Math.floor(dayjs(service?.end_date || 0).diff(dayjs(service.start_date))),
