@@ -17,10 +17,13 @@ import { TimerDate } from '../../components/timerDate/timerDate';
 import toast from 'react-hot-toast';
 import dayjs from 'dayjs';
 import { useFinishService } from '../../hooks/useFinishService';
+import { ErrorResponse, getError } from '../../utils/internalCodes';
+import useAuth from '../../hooks/useAuth';
 
 const Counter = () => {
 	const { finishService, isFinishingService, serviceFinished } = useFinishService();
 	const { setValue } = useFormattedValues();
+	const { verifyExpiresRefreshToken, getUser } = useAuth();
 	const queryClient = useQueryClient();
 	const { register, handleSubmit, watch, reset } = useForm();
 	const serviceName = watch('serviceName');
@@ -34,7 +37,7 @@ const Counter = () => {
 		mutationFn: async () => {
 			const newService = {
 				name: serviceName,
-				user_id: 1,
+				user_id: getUser()?.id,
 				start_date: dayjs(),
 				end_date: null,
 			};
@@ -42,29 +45,30 @@ const Counter = () => {
 			return response;
 		},
 		onSuccess: (e) => {
-			toast.success('Período iniciado!');
 			queryClient.setQueryData('service', () => {
 				return {
 					id: e.data.service.id,
 					name: serviceName,
-					user_id: 1,
+					user_id: getUser()?.id,
 					start_date: dayjs(),
 					end_date: null,
 				};
 			});
+			toast.success('Período iniciado!');
 		},
-		onError: (error: AxiosError) => {
+		onError: (error: AxiosError<ErrorResponse>) => {
 			console.log(error);
-			toast.error('Erro ao iniciar o período');
+			toast.error(getError(error));
 		},
 	});
 
 	async function getService() {
+		if (!verifyExpiresRefreshToken()) return;
 		try {
 			const response = await api.get('/service/user/1');
 			return response?.data;
-		} catch (error) {
-			toast.error('Não foi possível achar o último serviço');
+		} catch (error: any) {
+			toast.error(getError(error));
 		}
 	}
 

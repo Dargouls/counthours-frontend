@@ -17,9 +17,14 @@ import { useState } from 'react';
 import logo from '../../assets/images/brand/clock.svg';
 import avatar from '../../assets/images/avatars/avatar.png';
 import { useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
+import { LoginPage, useLoginContext } from '../../contexts/AuthContext';
 
 export const Header = () => {
+	const { getUser } = useAuth();
 	const navigate = useNavigate();
+	const user = getUser();
+	const { toggleShow } = useLoginContext();
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 	const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -154,9 +159,25 @@ export const Header = () => {
 							open={Boolean(anchorElUser)}
 							onClose={handleCloseUserMenu}
 						>
-							<MenuItem onClick={handleCloseUserMenu}>
-								<Typography textAlign='center'>Sair da conta</Typography>
-							</MenuItem>
+							{user ? (
+								<Box>
+									<MenuItem onClick={handleCloseUserMenu}>
+										<Typography textAlign='center'>{user?.name}</Typography>
+									</MenuItem>
+									<MenuItem onClick={handleCloseUserMenu}>
+										<Typography textAlign='center'>Sair da conta</Typography>
+									</MenuItem>
+								</Box>
+							) : (
+								<Box>
+									<MenuItem onClick={() => toggleShow()}>
+										<Typography textAlign='center'>Entrar na conta</Typography>
+									</MenuItem>
+									<MenuItem>
+										<Typography textAlign='center'>Criar conta</Typography>
+									</MenuItem>
+								</Box>
+							)}
 						</Menu>
 					</Box>
 				</Toolbar>

@@ -8,19 +8,23 @@ import { Wrapper } from './style';
 import { useEffect } from 'react';
 import { MagicMotion } from 'react-magic-motion';
 import dayjs from 'dayjs';
+import { getError } from '../../utils/internalCodes';
+import useAuth from '../../hooks/useAuth';
 
 const UserServicesList = ({ doRefetch }: any) => {
+	const { verifyExpiresRefreshToken } = useAuth();
 	const { setValue } = useFormattedValues();
 	const { data: services, isLoading, refetch } = useQuery('services', () => getServices());
 
 	async function getServices() {
+		if (!verifyExpiresRefreshToken()) return;
 		try {
 			const response = await api.get('/services/all/1');
 
 			return response?.data;
-		} catch (error) {
+		} catch (error: any) {
 			console.log(error);
-			toast.error('Erro ao carregar serviços');
+			toast.error(getError(error));
 		}
 	}
 
@@ -41,12 +45,13 @@ const UserServicesList = ({ doRefetch }: any) => {
 									dayjs(service?.end_date || 0) > dayjs(service?.start_date) && (
 										<Card key={service.id}>
 											<CardHeader
+												key={service.id}
 												subheader={
 													service.name || dayjs(service.start_date).format('DD/MM/YYYY, HH:mm')
 												}
 											/>
-											<CardContent>
-												<Typography variant='h4' className='flex justify-center'>
+											<CardContent key={service.id}>
+												<Typography variant='h4' className='flex justify-center' key={service.id}>
 													{setValue(
 														Math.floor(
 															dayjs(service?.end_date || 0).diff(dayjs(service.start_date))
@@ -61,8 +66,8 @@ const UserServicesList = ({ doRefetch }: any) => {
 							})
 							.reverse()}
 					{isLoading &&
-						Array.from({ length: 3 }).map((_) => (
-							<Skeleton sx={{ height: 140 }} animation='wave' variant='rectangular' />
+						Array.from({ length: 3 }).map((_, index) => (
+							<Skeleton key={index} sx={{ height: 140 }} animation='wave' variant='rectangular' />
 						))}
 				</List>
 			</Wrapper>

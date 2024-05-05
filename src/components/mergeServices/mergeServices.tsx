@@ -6,6 +6,7 @@ import { LoadingButton } from '@mui/lab';
 import { GridRowSelectionModel } from '@mui/x-data-grid';
 import { useForm } from 'react-hook-form';
 import { AxiosError } from 'axios';
+import useAuth from '../../hooks/useAuth';
 
 interface IModalProps {
 	open: boolean;
@@ -24,6 +25,7 @@ const boxStyle = {
 	p: 4,
 };
 export const MergeServices = ({ open, onClose, idsServices }: IModalProps) => {
+	const { getUser } = useAuth();
 	const { register, handleSubmit, watch } = useForm();
 	const mergeName = watch('merge-name');
 	const { mutate: mergeServices, isLoading: isMerging } = useMutation(() => handleMergeServices(), {
@@ -43,7 +45,7 @@ export const MergeServices = ({ open, onClose, idsServices }: IModalProps) => {
 		const response = await api.post('/services/merge', {
 			ids: idsServices.map((id) => id),
 			name: mergeName || null,
-			user_id: 1,
+			user_id: getUser()?.id,
 		});
 		return response?.data;
 	}

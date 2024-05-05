@@ -20,9 +20,16 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault('America/Sao_Paulo');
 
-const router = createBrowserRouter([...DefaultRouter.map((route: IRoute) => route)], {
-	basename: import.meta.env.BASE_URL,
-});
+const router = createBrowserRouter(
+	[
+		...DefaultRouter.map((route: IRoute) => {
+			return route;
+		}),
+	],
+	{
+		basename: import.meta.env.BASE_URL,
+	}
+);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
@@ -33,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 					new QueryClient({
 						defaultOptions: {
 							queries: { staleTime: 10000, refetchOnWindowFocus: false },
-							mutations: { retry: 1 },
+							// mutations: { retry: 1 },
 						},
 					})
 				}

@@ -637,6 +637,14 @@ h3 {
   justify-content: center !important;
 }
 
+.justify-between {
+  justify-content: space-between !important;
+}
+
+.gap-1 {
+  gap: 0.25rem !important;
+}
+
 .gap-2 {
   gap: 0.5rem !important;
 }

@@ -1,12 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import AOS from 'aos';
 
 import { Header } from '../components/header/header';
 import { Outlet } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
+import Login from '../views/Auth/Login';
+import useAuth from '../hooks/useAuth';
 
 const DefaultLayout = () => {
+	const { verifyRefreshToken, _logout } = useAuth();
+
+	useEffect(() => {
+		if (verifyRefreshToken()) {
+			_logout();
+			toast.error('Sua sessão expirou, faça login novamente...');
+		}
+	}, []);
+
 	useEffect(() => {
 		AOS.init({
 			startEvent: 'DOMContentLoaded',
@@ -19,6 +30,7 @@ const DefaultLayout = () => {
 			offset: 10,
 		});
 	});
+
 	return (
 		<>
 			<Header />
@@ -26,6 +38,7 @@ const DefaultLayout = () => {
 				<Outlet />
 			</section>
 			<Toaster position='bottom-right' toastOptions={{ duration: 3000 }} />
+			<Login />
 		</>
 	);
 };
