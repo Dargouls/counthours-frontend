@@ -36,7 +36,9 @@ const UserServicesList = ({ doRefetch }: any) => {
 	return (
 		<MagicMotion>
 			<Wrapper className='mt-4'>
-				<Typography variant='h5'>Últimos períodos</Typography>
+				<Typography variant='h5'>
+					{(services?.length || 0) > 0 ? 'Últimos períodos' : ''}
+				</Typography>
 				<List className='flex gap-2 justify-center' sx={{ height: 150 }}>
 					{Array.isArray(services) &&
 						services

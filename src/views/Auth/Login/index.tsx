@@ -30,7 +30,11 @@ const Login = () => {
 	};
 
 	return (
-		<Modal open={showLogin} className='flex justify-center items-center'>
+		<Modal
+			open={showLogin}
+			onClose={() => toggleShow()}
+			className='flex justify-center items-center'
+		>
 			<Card title='Faça login para continuar'>
 				<CardHeader title='Login' subheader='Se não tiver uma conta, clique aqui para criar uma.' />
 				<CardContent>

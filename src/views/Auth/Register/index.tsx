@@ -30,7 +30,11 @@ const Register = () => {
 	};
 
 	return (
-		<Modal open={showRegister} className='flex justify-center items-center'>
+		<Modal
+			open={showRegister}
+			onClose={() => toggleShowRegister()}
+			className='flex justify-center items-center'
+		>
 			<Card title='Faça login para continuar'>
 				<CardHeader title='Login' subheader='Isso demora menos de meio minuto :D' />
 				<CardContent>
