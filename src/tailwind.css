@@ -599,6 +599,10 @@ h3 {
   height: 100vh !important;
 }
 
+.w-48 {
+  width: 12rem !important;
+}
+
 .w-96 {
   width: 24rem !important;
 }
@@ -649,10 +653,24 @@ h3 {
   gap: 0.5rem !important;
 }
 
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+.text-nowrap {
+  text-wrap: nowrap !important;
+}
+
 .p-8 {
   padding: 2rem !important;
 }
 
 .no-underline {
   text-decoration-line: none !important;
+}
+
+@media (min-width: 1024px) {
+  .lg\:w-6\/12 {
+    width: 50% !important;
+  }
 }

@@ -17,7 +17,7 @@ import { LoadingButton } from '@mui/lab';
 import { useLoginContext } from '../../../contexts/AuthContext';
 
 const Login = () => {
-	const { toggleShow, showModal } = useLoginContext();
+	const { toggleShow, showLogin } = useLoginContext();
 	const { login, isLoadingLogin } = useAuth();
 	const { register, watch, handleSubmit } = useForm();
 	const [subPage, setSubPage] = useState(1);
@@ -30,7 +30,7 @@ const Login = () => {
 	};
 
 	return (
-		<Modal open={showModal} className='flex justify-center items-center'>
+		<Modal open={showLogin} className='flex justify-center items-center'>
 			<Card title='Faça login para continuar'>
 				<CardHeader title='Login' subheader='Se não tiver uma conta, clique aqui para criar uma.' />
 				<CardContent>

@@ -5,13 +5,7 @@ import * as jwt_decode from 'jwt-decode';
 import toast from 'react-hot-toast';
 import { ErrorResponse, getError } from '../utils/internalCodes';
 import { AxiosError } from 'axios';
-import { useLoginContext } from '../contexts/AuthContext';
-
-interface IPayloadTokens extends jwt_decode.JwtPayload {
-	id: any;
-	email: string;
-	name: string;
-}
+import { IPayloadTokens } from '../baseInterfaces/IPayloadTokens';
 
 /**
  * @description `Ciclo para refresh:` chama a função verifyRefreshToken. Ela vai gerar um novo refreshToken ou logout caso o token esteja expirado.
@@ -19,8 +13,6 @@ interface IPayloadTokens extends jwt_decode.JwtPayload {
  */
 
 const useAuth = () => {
-	const { toggleShow } = useLoginContext();
-
 	const {
 		mutate: login,
 		isLoading: isLoadingLogin,
@@ -32,37 +24,70 @@ const useAuth = () => {
 			toast.error(getError(error));
 		},
 	});
+	const {
+		mutate: createAccount,
+		isLoading: isCreatingAccount,
+		isSuccess: isCreated,
+		isError: isErrorRegister,
+	} = useMutation(
+		'createAccount',
+		async ({ name, email, password }: any) => _createAccount({ name, email, password }),
+		{
+			onError: (error: AxiosError<ErrorResponse>) => {
+				console.log(error);
+				toast.error(getError(error));
+			},
+		}
+	);
 
 	async function _login({ email, password }: any) {
 		if (!email || !password) return;
 		const response = await api.post('/login', { email, password });
+
 		if (response?.data?.tokens?.accessToken || response?.data?.tokens?.refreshToken) {
-			Cookies.set('access_token', response?.data.tokens.accessToken, {
+			Cookies.set('counthours_access_token', response?.data.tokens.accessToken, {
 				path: '/',
 				// secure: true,
 				sameSite: 'strict',
 			});
-			Cookies.set('refresh_token', response?.data.tokens.refreshToken, {
+			Cookies.set('counthours_refresh_token', response?.data.tokens.refreshToken, {
 				path: '/',
 				// secure: true,
 				sameSite: 'strict',
 			});
-			toggleShow();
+			window.location.reload();
 		}
 		return response?.data;
 	}
 
-	async function _createAccount() {}
+	async function _createAccount({ name, email, password }: any) {
+		if (!name || !email || !password) return;
+		const response = await api.post('/create-account', { name, email, password });
+		if (response?.data?.tokens?.accessToken || response?.data?.tokens?.refreshToken) {
+			Cookies.set('counthours_access_token', response?.data.tokens.accessToken, {
+				path: '/',
+				// secure: true,
+				sameSite: 'strict',
+			});
+			Cookies.set('counthours_refresh_token', response?.data.tokens.refreshToken, {
+				path: '/',
+				// secure: true,
+				sameSite: 'strict',
+			});
+			window.location.reload();
+		}
+		return response?.data;
+	}
 
 	async function _logout() {
-		Cookies.remove('access_token');
-		Cookies.remove('refresh_token');
+		Cookies.remove('counthours_access_token');
+		Cookies.remove('counthours_refresh_token');
 
 		window.location.href = '/';
 	}
 
 	function getAccessToken() {
-		const accessToken = Cookies.get('access_token');
+		const accessToken = Cookies.get('counthours_access_token');
 		// try {
 		// 	const verifyToken = await api.post('/verify/tokens', { token: accessToken, refreshToken });
 		// 	console.log(verifyToken);
@@ -74,7 +99,7 @@ const useAuth = () => {
 	}
 
 	function getUser() {
-		const accessToken = Cookies.get('access_token');
+		const accessToken = Cookies.get('counthours_access_token');
 		if (!accessToken) return;
 		const user = jwt_decode.jwtDecode<IPayloadTokens>(accessToken || '');
 		const userInfo = {
@@ -87,18 +112,18 @@ const useAuth = () => {
 	}
 
 	function getRefreshToken() {
-		const refreshToken = Cookies.get('refresh_token');
+		const refreshToken = Cookies.get('counthours_refresh_token');
 		return refreshToken;
 	}
 
 	async function regenerateRefreshToken() {
-		const refreshToken = Cookies.get('refresh_token');
+		const refreshToken = Cookies.get('counthours_refresh_token');
 		const user = getUser();
 		if (!refreshToken || !user) return;
 
 		try {
 			const response = await api.post('/verify/get/refresh-token', getUser());
-			Cookies.set('refresh_token', response?.data?.refreshToken, {
+			Cookies.set('counthours_refresh_token', response?.data?.refreshToken, {
 				path: '/',
 				sameSite: 'strict',
 			});
@@ -111,7 +136,7 @@ const useAuth = () => {
 	}
 
 	function verifyRefreshToken() {
-		const refreshToken = Cookies.get('refresh_token');
+		const refreshToken = Cookies.get('counthours_refresh_token');
 		if (refreshToken === 'undefined' || refreshToken === 'null') {
 			_logout();
 			toast.error('Sua sessão expirou, faça login novamente...');
@@ -124,21 +149,23 @@ const useAuth = () => {
 
 			if (isExpires) {
 				const response = regenerateRefreshToken();
-				if (!response) _logout();
-				return false;
+				if (!response) {
+					_logout();
+					return false;
+				}
 			}
 		}
 		return true;
 	}
 	function verifyExpiresAccessToken() {
-		const accessToken = Cookies.get('access_token');
+		const accessToken = Cookies.get('counthours_access_token');
 		if (!accessToken) return false;
 		jwt_decode.jwtDecode(accessToken);
 		return;
 	}
 
 	function verifyExpiresRefreshToken() {
-		const refreshToken = Cookies.get('refresh_token');
+		const refreshToken = Cookies.get('counthours_refresh_token');
 		if (!refreshToken) return false;
 		jwt_decode.jwtDecode(refreshToken);
 		return true;
@@ -154,7 +181,10 @@ const useAuth = () => {
 		verifyExpiresRefreshToken,
 		verifyRefreshToken,
 		isErrorLogin,
-		_createAccount,
+		createAccount,
+		isCreatingAccount,
+		isErrorRegister,
+		isCreated,
 		_logout,
 	};
 };

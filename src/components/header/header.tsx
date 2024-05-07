@@ -24,7 +24,7 @@ export const Header = () => {
 	const { getUser, _logout } = useAuth();
 	const navigate = useNavigate();
 	const user = getUser();
-	const { toggleShow } = useLoginContext();
+	const { toggleShow, toggleShowRegister } = useLoginContext();
 	const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 	const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -97,15 +97,17 @@ export const Header = () => {
 									Início
 								</Link>
 							</MenuItem>
-							<MenuItem onClick={handleCloseNavMenu}>
-								<Link
-									className='no-underline'
-									onClick={() => navigate('/services')}
-									textAlign='center'
-								>
-									Períodos
-								</Link>
-							</MenuItem>
+							{getUser() && (
+								<MenuItem onClick={handleCloseNavMenu}>
+									<Link
+										className='no-underline'
+										onClick={() => navigate('/services')}
+										textAlign='center'
+									>
+										Períodos
+									</Link>
+								</MenuItem>
+							)}
 						</Menu>
 					</Box>
 					<Typography
@@ -130,17 +132,19 @@ export const Header = () => {
 						<Button onClick={() => navigate('/')} sx={{ my: 2, color: 'white', display: 'block' }}>
 							Início
 						</Button>
-						<Button
-							onClick={() => navigate('/services')}
-							sx={{ my: 2, color: 'white', display: 'block' }}
-						>
-							Períodos
-						</Button>
+						{getUser() && (
+							<Button
+								onClick={() => navigate('/services')}
+								sx={{ my: 2, color: 'white', display: 'block' }}
+							>
+								Períodos
+							</Button>
+						)}
 					</Box>
 					<Box sx={{ flexGrow: 0 }}>
 						<Tooltip title='Configurações'>
 							<IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-								<Avatar alt='Gabriel Azevedo' src={avatar} />
+								<Avatar alt='foto-usuario' />
 							</IconButton>
 						</Tooltip>
 						<Menu
@@ -173,7 +177,7 @@ export const Header = () => {
 									<MenuItem onClick={() => toggleShow()}>
 										<Typography textAlign='center'>Entrar na conta</Typography>
 									</MenuItem>
-									<MenuItem>
+									<MenuItem onClick={() => toggleShowRegister()}>
 										<Typography textAlign='center'>Criar conta</Typography>
 									</MenuItem>
 								</Box>

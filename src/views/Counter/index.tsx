@@ -90,7 +90,7 @@ const Counter = () => {
 			<Wrapper data-aos='zoom-out-down' onSubmit={handleSubmit(handleStartDate)}>
 				<div className='mb-4 w-100 flex flex-row justify-center'>
 					<Collapse
-						sx={{ width: '50%' }}
+						className='w-full lg:w-6/12'
 						in={service?.end_date || !service?.start_date ? true : false}
 					>
 						<TextField

@@ -7,6 +7,7 @@ import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Login from '../views/Auth/Login';
 import useAuth from '../hooks/useAuth';
+import Register from '../views/Auth/Register';
 
 const DefaultLayout = () => {
 	const { verifyRefreshToken } = useAuth();
@@ -36,6 +37,7 @@ const DefaultLayout = () => {
 			</section>
 			<Toaster position='bottom-right' toastOptions={{ duration: 3000 }} />
 			<Login />
+			<Register />
 		</>
 	);
 };

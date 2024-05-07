@@ -20,8 +20,9 @@ const UserServicesList = ({ doRefetch }: any) => {
 		if (!verifyExpiresRefreshToken()) return;
 		try {
 			const response = await api.get(`/services/all/${getUser()?.id}`);
-
-			return response?.data;
+			return Array.isArray(response?.data)
+				? response?.data.sort((a, b) => dayjs(b.end_date).diff(dayjs(a.end_date)))
+				: [];
 		} catch (error: any) {
 			console.log(error);
 			toast.error(getError(error));
@@ -43,21 +44,24 @@ const UserServicesList = ({ doRefetch }: any) => {
 							.map((service: IService) => {
 								return (
 									dayjs(service?.end_date || 0) > dayjs(service?.start_date) && (
-										<Card key={service.id}>
+										<Card key={service.id} className='w-48'>
 											<CardHeader
 												key={service.id}
+												className='text-nowrap overflow-hidden'
 												subheader={
-													service.name || dayjs(service.start_date).format('DD/MM/YYYY, HH:mm')
+													service.name || dayjs(service.end_date).format('DD/MM/YYYY, HH:mm')
 												}
 											/>
 											<CardContent key={service.id}>
 												<Typography variant='h4' className='flex justify-center' key={service.id}>
-													{setValue(
-														Math.floor(
-															dayjs(service?.end_date || 0).diff(dayjs(service.start_date))
-														),
-														{ type: 'hours' }
-													)}
+													{service.total_hours
+														? setValue(service.total_hours, { type: 'hours' })
+														: setValue(
+																Math.floor(
+																	dayjs(service?.end_date || 0).diff(dayjs(service.start_date))
+																),
+																{ type: 'hours' }
+														  )}
 												</Typography>
 											</CardContent>
 										</Card>
