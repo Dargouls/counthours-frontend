@@ -124,9 +124,7 @@ export const Header = () => {
 							color: 'inherit',
 							textDecoration: 'none',
 						}}
-					>
-						CONTA HORAS
-					</Typography>
+					></Typography>
 					<Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 						<Button onClick={() => navigate('/')} sx={{ my: 2, color: 'white', display: 'block' }}>
 							Início

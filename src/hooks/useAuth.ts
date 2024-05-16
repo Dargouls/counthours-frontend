@@ -12,6 +12,16 @@ import { IPayloadTokens } from '../baseInterfaces/IPayloadTokens';
  *
  */
 
+interface ILogin {
+	email: string;
+	password: string;
+}
+interface ICreateAccount {
+	name: string;
+	email: string;
+	password: string;
+}
+
 const useAuth = () => {
 	const {
 		mutate: login,
@@ -40,9 +50,9 @@ const useAuth = () => {
 		}
 	);
 
-	async function _login({ email, password }: any) {
+	async function _login({ email, password }: ILogin) {
 		if (!email || !password) return;
-		const response = await api.post('/login', { email, password });
+		const response = await api.post('/login', { email: email.toLowerCase().trim(), password });
 
 		if (response?.data?.tokens?.accessToken || response?.data?.tokens?.refreshToken) {
 			Cookies.set('counthours_access_token', response?.data.tokens.accessToken, {
@@ -60,9 +70,13 @@ const useAuth = () => {
 		return response?.data;
 	}
 
-	async function _createAccount({ name, email, password }: any) {
+	async function _createAccount({ name, email, password }: ICreateAccount) {
 		if (!name || !email || !password) return;
-		const response = await api.post('/create-account', { name, email, password });
+		const response = await api.post('/create-account', {
+			name: name.trim(),
+			email: email.toLowerCase().trim(),
+			password,
+		});
 		if (response?.data?.tokens?.accessToken || response?.data?.tokens?.refreshToken) {
 			Cookies.set('counthours_access_token', response?.data.tokens.accessToken, {
 				path: '/',

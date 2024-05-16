@@ -633,6 +633,10 @@ h3 {
   flex-direction: column !important;
 }
 
+.flex-wrap {
+  flex-wrap: wrap !important;
+}
+
 .items-center {
   align-items: center !important;
 }
