@@ -94,7 +94,6 @@ const Counter = () => {
 						in={service?.end_date || !service?.start_date ? true : false}
 					>
 						<TextField
-							id='service-name'
 							className='w-100'
 							variant='filled'
 							label='Nome da atividade (opcional)'

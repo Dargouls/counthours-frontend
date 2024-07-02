@@ -6,8 +6,4 @@ export const Wrapper = styled.form`
 
 	justify-content: center;
 	align-items: center;
-
-	#service-name{
-		width: 50%;
-	}
 `;
